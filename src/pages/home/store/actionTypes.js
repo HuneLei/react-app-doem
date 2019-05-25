@@ -1,5 +1,4 @@
-export const HANDLE_INPUT_FOCUS = 'hear/handle_input_focus';
-export const HANDLE_INPUT_BLUR = 'hear/handle_input_blur';
-export const HANDLE_SEACH_LIST = 'hear/handle_seach_list';
-export const MOUSE_ENTER = 'hear/handle_mouse_enter';
-export const CHANGE_PAGE = 'hear/handle_change_page';
+export const HANDLE_TOPIC_LIST = 'home/handle_topic_list'
+export const HANDLE_ARTICLE_LIST = 'home/handle_article_list'
+export const HANDLE_RECOMMEND_LIST = 'home/handle_recommend_list'
+export const CHANGE_TOP_SHOW = 'home/change_top_show'

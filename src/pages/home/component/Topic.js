@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { TopicWrapper, TopicItem } from '../style';
 import { connect } from 'react-redux';
 
-class Topic extends Component {
+class Topic extends PureComponent {
   render() {
-    const {topiclist} = this.props;
+    const { topiclist } = this.props;
     return (
-      <TopicWrapper> 
+      <TopicWrapper>
         {topiclist.map(item => {
           return (
             <TopicItem key={item.get('id')}>
-              <img 
-                alt=''
-                className="topic-pic"
-                src={item.get('imgUrl')} />
+              <img alt="" className="topic-pic" src={item.get('imgUrl')} />
               {item.get('title')}
             </TopicItem>
-          )
+          );
         })}
-        
       </TopicWrapper>
-    )
+    );
   }
 }
 
@@ -31,11 +27,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-  };
+  return {};
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Topic)
+)(Topic);

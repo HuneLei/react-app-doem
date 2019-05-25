@@ -6,7 +6,7 @@ const defaultState = fromJS({
   list: [],
   page: 1,
   totalPage: 1,
-  mouseIn: false
+  mouseIn: false,
 });
 
 export default (state = defaultState, action) => {
@@ -16,10 +16,10 @@ export default (state = defaultState, action) => {
     case actionTypes.HANDLE_INPUT_BLUR:
       return state.set('focused', action.value);
     case actionTypes.HANDLE_SEACH_LIST:
-    return state.merge({
-      list: action.data,
-      totalPage: action.totalPage
-    })
+      return state.merge({
+        list: action.data,
+        totalPage: action.totalPage,
+      });
     case actionTypes.MOUSE_ENTER:
       return state.set('mouseIn', action.value);
     case actionTypes.CHANGE_PAGE:

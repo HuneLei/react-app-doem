@@ -2,39 +2,65 @@ import axios from 'axios';
 import { fromJS } from 'immutable';
 import * as actionTypes from './actionTypes';
 
-export const toseachlist = data => ({
-  type: actionTypes.HANDLE_SEACH_LIST,
-  data: fromJS(data),
-  totalPage: Math.ceil(data.length / 10)
+export const toTopiclist = data => ({
+  type: actionTypes.HANDLE_TOPIC_LIST,
+  data: fromJS(data.topiclist),
 });
 
-export const tohandleinputfocus = value => ({
-  type: actionTypes.HANDLE_INPUT_FOCUS,
-  value,
-});
-
-export const tohandleInputBlur = value => ({
-  type: actionTypes.HANDLE_INPUT_BLUR,
-  value,
-});
-
-export const mouseEnter = value => ({
-  type: actionTypes.MOUSE_ENTER,
-  value,
-})
-
-export const changePage = page => ({
-  type: actionTypes.CHANGE_PAGE,
+export const toArticleList = (data, page) => ({
+  type: actionTypes.HANDLE_ARTICLE_LIST,
+  data: fromJS(data.articleList),
   page,
-})
+});
 
-export const getList = () => {
-  return (dispatch) => {
-    axios.get('http://yapi.demo.qunar.com/mock/67688/api/seachlist').then((res) => {
-      const data = res.data;
-      dispatch(toseachlist(data.data))
-    }).catch((error) => {
-      console.log('error', error)
-    })
-  }
-}
+export const toRecommendList = data => ({
+  type: actionTypes.HANDLE_RECOMMEND_LIST,
+  data: fromJS(data.RecommendList),
+});
+
+export const changeTopShow = value => ({
+  type: actionTypes.CHANGE_TOP_SHOW,
+  value,
+});
+
+export const getTopiclist = () => {
+  return dispatch => {
+    axios
+      .get('http://yapi.demo.qunar.com/mock/67688/api/gettopiclist')
+      .then(res => {
+        const data = res.data;
+        dispatch(toTopiclist(data.data));
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
+};
+
+export const getArticleList = (page = 0) => {
+  return dispatch => {
+    axios
+      .get(`http://yapi.demo.qunar.com/mock/67688/api/getarticleList?page=${page}`)
+      .then(res => {
+        const data = res.data;
+        dispatch(toArticleList(data.data, page + 1));
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
+};
+
+export const getRecommendList = () => {
+  return dispatch => {
+    axios
+      .get('http://yapi.demo.qunar.com/mock/67688/api/getRecommendList')
+      .then(res => {
+        const data = res.data;
+        dispatch(toRecommendList(data.data));
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
+};
