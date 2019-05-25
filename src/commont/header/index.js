@@ -1,0 +1,135 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
+import { actionCreators } from './store';
+import {
+  HeaderWrapper,
+  Logo,
+  Nav,
+  NavItem,
+  NavSearch,
+  Addition,
+  Button,
+  SearchWrapper,
+  SearchInfo,
+  SearchInfoTilte,
+  SearchInfoSwitch,
+  SearchInfoItem,
+  SearchInfoList,
+} from './style';
+
+class Header extends Component {
+  render() {
+    const { focused, handleInputFocus, handleInputBlur, list } = this.props;
+    return (
+      <HeaderWrapper>
+        <Logo />
+        <Nav>
+          <NavItem className="left action">首页</NavItem>
+          <NavItem className="left">下载App</NavItem>
+          <NavItem className="right">登录</NavItem>
+          <NavItem className="right">
+            <i className="iconfont">&#xe636;</i>
+          </NavItem>
+          <SearchWrapper>
+            <CSSTransition timeout={200} in={focused} classNames="slide">
+              <NavSearch
+                className={focused ? 'focused' : ''}
+                onFocus={() => handleInputFocus(list)}
+                onBlur={handleInputBlur}
+              />
+            </CSSTransition>
+            <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>&#xe62d;</i>
+            {this.getListArea()}
+          </SearchWrapper>
+        </Nav>
+        <Addition>
+          <Button className="writting">
+            <i className="iconfont">&#xe624;</i>
+            写文章
+          </Button>
+          <Button className="reg">注册</Button>
+        </Addition>
+      </HeaderWrapper>
+    )
+  }
+  getListArea() {
+    const { focused, list, page, totalPage, mouseIn, hanldMouseEnter, hanldMouseLeave, handleChangePage } = this.props;
+    const newList = list.toJS()
+    const pageList = [];
+    if (newList.length) {
+      for (let i = (page - 1) * 10; i < page * 10; i++) {
+        if (newList[i]) {
+          pageList.push(
+            <SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
+          )
+        }
+      }
+    }
+    if (focused || mouseIn) {
+      return (
+        <SearchInfo onMouseEnter={hanldMouseEnter} onMouseLeave={hanldMouseLeave}>
+          <SearchInfoTilte>
+            热门搜索
+            <SearchInfoSwitch onClick={() => handleChangePage(page, totalPage, this.spinIcon)}>
+              <i ref={(icon) => { this.spinIcon = icon }} className="iconfont spin">&#xe635;</i>
+              换一批
+            </SearchInfoSwitch>
+          </SearchInfoTilte>
+          <SearchInfoList>
+            {pageList}
+          </SearchInfoList>
+        </SearchInfo>
+      );
+    } else {
+      return null;
+    }
+  };
+}
+
+const mapStateToProps = state => {
+  return {
+    focused: state.getIn(['header', 'focused']),
+    list: state.getIn(['header', 'list']),
+    page: state.getIn(['header', 'page']),
+    totalPage: state.getIn(['header', 'totalPage']),
+    mouseIn: state.getIn(['header', 'mouseIn']),
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleInputFocus(list) {
+      (list.size === 0) && dispatch(actionCreators.getList());
+      dispatch(actionCreators.tohandleinputfocus(true));
+    },
+    handleInputBlur() {
+      dispatch(actionCreators.tohandleInputBlur(false));
+    },
+    hanldMouseLeave() {
+      dispatch(actionCreators.mouseEnter(false));
+    },
+    hanldMouseEnter() {
+      dispatch(actionCreators.mouseEnter(true));
+    },
+    handleChangePage(page, totalPage, spin) {
+      let originAngin = spin.style.transform.replace(/[^0-9]/ig, '')
+      if (originAngin) {
+        originAngin = parseInt(originAngin, 10)
+      } else {
+        originAngin = 0
+      }
+      spin.style.transform = `rotate(${originAngin + 360}deg)`
+      if (page < totalPage) {
+        dispatch(actionCreators.changePage(page + 1));
+      } else {
+        dispatch(actionCreators.changePage(1));
+      }
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Header);
